@@ -2,6 +2,8 @@ import datetime
 import numpy
 import pandas
 from davitpy import pydarn
+import glob
+import feather
 
 
 class SDUtils(object):
@@ -21,7 +23,7 @@ class SDUtils(object):
         self.fileType = fileType
         self.filtered = filtered
 
-    def fetch_data(self):
+    def fetch_data_ptr(self):
         """
         Fetch data using davitpy routine. Remember to fetch
         fitacf3 files, we need to use Kevin's code from the 
@@ -34,12 +36,42 @@ class SDUtils(object):
             return pydarn.sdio.radDataReadAll(dataPtr)
         return None
 
-    def convert_to_df(self):
+    def get_sd_data(self, saveToDisk=False):
         """
         Convert the data pointer from davitpy holding
         SuperDARN data to a dataframe.
         """
-        dataRecList = self.fetch_data()
+        # Check if we have a saved version of the DF as feather file
+        # create a search pattern for the filename
+        # The pattern below will not satisfy all the cases, but I'm
+        # at this point assuming the start date will be the same
+        fileFound = False
+        fSrchPtrn = "/tmp/" + self.startTime.strftime("%Y%m%d") +\
+                        "*" + self.fileType + ".feather"
+        print fSrchPtrn
+        # see if we can find any matching files
+        for fthrFLoc in glob.iglob(fSrchPtrn):
+            fthrFname = fthrFLoc.split("/tmp/")[1]
+            fileStartTime = datetime.datetime.strptime( \
+                        fthrFname.split("__")[0], "%Y%m%d-%H%M" )
+            fileEndTime = datetime.datetime.strptime( \
+                        fthrFname.split("__")[1], "%Y%m%d-%H%M" )
+            if ( (fileStartTime <= self.startTime) &\
+                             (fileEndTime >= self.endTime) ):
+                print "feather file found--->", fthrFLoc
+                fileFound = True
+                # read the file
+                sdDF = feather.read_dataframe(fthrFLoc)
+                # Filter the dataframe so that the starttime
+                # and endtime are as input (remember the start
+                # and end times could be different in the file stored)
+                sdDF = sdDF[ (sdDF["date"] >= self.startTime) &\
+                            (sdDF["date"] <= self.endTime)\
+                                    ].reset_index(drop=True)
+                return (self.fileType, sdDF)
+        print "feather file not found...reading from sd-data..."
+        # If not read data from sd-data using davitpy!
+        dataRecList = self.fetch_data_ptr()
         if dataRecList is None:
             return None
         # we'll create a dataframe with all the data
@@ -80,6 +112,9 @@ class SDUtils(object):
                             numpy.full( (len(rec.fit.qflg)), rec.time) ) )
             bmArr = numpy.concatenate( ( bmArr,\
                             numpy.full( (len(rec.fit.qflg)), rec.bmnum) ) )
+            outFileType = rec.fType
+        if outFileType != self.fileType:
+            print "*****READING DATA FROM A DIFERENT FILE FORMAT*****"
         sdDF = pandas.DataFrame( {
             "qflg" : qflgArr,
             "gate" : gateArr,
@@ -94,14 +129,23 @@ class SDUtils(object):
         # floats now! This is memory efficient!
         intCols = [ "qflg", "gate", "gflg", "beam" ]
         sdDF[intCols] = sdDF[intCols].astype(numpy.int16)
-        print sdDF.head()
-        print "------------------"
-        print sdDF.dtypes
+        # Now we'll try and save the DF in the /tmp/ folder
+        # for future use.
+        if saveToDisk:
+            outDfFName = self.startTime.strftime("%Y%m%d-%H%M") + "__" +\
+                     self.endTime.strftime("%Y%m%d-%H%M") +\
+                      "__" + outFileType + ".feather"
+            feather.write_dataframe( sdDF, "/tmp/" + outDfFName )
+        # return the dataframe and fileType for plotting
+        return (outFileType, sdDF)
 
 if __name__ == "__main__":
-    startTime = datetime.datetime(2017,12,2)
-    endTime = datetime.datetime(2017,12,3)
+    startTime = datetime.datetime(2017,12,2,12)
+    endTime = datetime.datetime(2017,12,3,18)
     radar = 'bks'
     fileType = 'fitacf3'
     sdObj = SDUtils(startTime, endTime, radar, fileType)
-    sdObj.convert_to_df()
+    xx = sdObj.get_sd_data(saveToDisk=True)
+    print xx[0]
+    print "-----------------------"
+    print xx[1]
