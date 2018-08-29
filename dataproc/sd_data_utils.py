@@ -97,3 +97,11 @@ class SDUtils(object):
         print sdDF.head()
         print "------------------"
         print sdDF.dtypes
+
+if __name__ == "__main__":
+    startTime = datetime.datetime(2017,12,2)
+    endTime = datetime.datetime(2017,12,3)
+    radar = 'bks'
+    fileType = 'fitacf3'
+    sdObj = SDUtils(startTime, endTime, radar, fileType)
+    sdObj.convert_to_df()
