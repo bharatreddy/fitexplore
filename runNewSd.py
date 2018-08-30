@@ -20,10 +20,10 @@ def regularpage( pagename=None ):
     return "No such page as " + pagename + " please go back!!! "    
 
 ### Altair Data Routes
-@app.route("/defaultplot")
+@app.route("/fitbaseplot")
 def data_bar():
-    startTime = datetime.datetime(2017,12,2)
-    endTime = datetime.datetime(2017,12,3)
+    startTime = datetime.datetime(2017,12,2,2)
+    endTime = datetime.datetime(2017,12,2,3)
     radar = 'bks'
     fileType = 'fitacf3'
     sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
@@ -31,4 +31,4 @@ def data_bar():
 
 if __name__ == "__main__":
     app.debug=True
-    app.run(host= '0.0.0.0',port=5000)
+    app.run(host= '0.0.0.0',port=5000, threaded=True)

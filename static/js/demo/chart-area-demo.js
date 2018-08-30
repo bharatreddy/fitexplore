@@ -16,12 +16,11 @@ var opt = {
 //   // result.view is the Vega View, url is the original Vega-Lite specification
 //   vegaTooltip.vegaLite(result.view, url);
 // });
-vegaEmbed('#vis', url).then(function(result) {
-	console.log("Hi2")
+vegaEmbed("#"+div, url).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 }
-parse("/defaultplot", "vis")
+parse("/fitbaseplot", "fitbasevis")
 // parse("/data/waterfall", "waterfall")
 // parse("/data/line", "line");
 // parse("/data/multiline", "multiline");

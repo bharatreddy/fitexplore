@@ -68,6 +68,7 @@ class SDDataUtils(object):
                 sdDF = sdDF[ (sdDF["date"] >= self.startTime) &\
                             (sdDF["date"] <= self.endTime)\
                                     ].reset_index(drop=True)
+                # the datetime column is in UTC
                 return (self.fileType, sdDF)
         print "feather file not found...reading from sd-data..."
         # If not read data from sd-data using davitpy!
@@ -125,6 +126,9 @@ class SDDataUtils(object):
             "date" : dtArr,
             "beam" : bmArr,
             })
+        # assign UTC timezone to the date columns, this becomes
+        # important when you render the data in a browser!
+        sdDF["date"] =  sdDF["date"].dt.tz_localize('UTC')
         # Convert int cols to int16, they are being stored as 
         # floats now! This is memory efficient!
         intCols = [ "qflg", "gate", "gflg", "beam" ]

@@ -54,8 +54,8 @@ class SDPlotUtils(object):
         sdDF = self._sdData_[1]
         # dealing with large rows
         alt.data_transformers.enable('json')
-        chart = alt.Chart(sdDF).mark_circle(size=30).encode(
-            x=alt.X('date', axis=alt.Axis(title='Time (UT)')),
+        chart = alt.Chart(sdDF, height=400, width=600).mark_circle(size=10).encode(
+            x=alt.X('utchoursminutesseconds(date):T', axis=alt.Axis(title='Time (UT)')),
             y=alt.Y('vel', axis=alt.Axis(title='Velocity [m/s]')),
             tooltip=['vel', 'spw', 'pwr']
         ).properties(
