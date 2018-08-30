@@ -6,7 +6,7 @@ import glob
 import feather
 
 
-class SDUtils(object):
+class SDDataUtils(object):
     """
     Given a filetype fitacf/fitacf3 and fitex
     get the data from sd database and convert
@@ -144,8 +144,5 @@ if __name__ == "__main__":
     endTime = datetime.datetime(2017,12,3,18)
     radar = 'bks'
     fileType = 'fitacf3'
-    sdObj = SDUtils(startTime, endTime, radar, fileType)
-    xx = sdObj.get_sd_data(saveToDisk=True)
-    print xx[0]
-    print "-----------------------"
-    print xx[1]
+    sdObj = SDDataUtils(startTime, endTime, radar, fileType)
+    outDF = sdObj.get_sd_data(saveToDisk=True)
