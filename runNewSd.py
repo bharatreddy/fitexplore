@@ -21,7 +21,7 @@ def regularpage( pagename=None ):
 
 ### Altair Data Routes
 @app.route("/fitbaseplot")
-def data_bar():
+def generate_base_plot():
     startTime = datetime.datetime(2017,12,2,2)
     endTime = datetime.datetime(2017,12,2,3)
     radar = 'bks'
@@ -29,6 +29,20 @@ def data_bar():
     sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
     return jsonify(sdPltObj.full_vel_time_plot())
 
+
+@app.route("/updatebaseplot", methods=['POST'])
+def update_plot():
+    startTime = datetime.datetime(2017,12,2,2)
+    endTime = datetime.datetime(2017,12,2,3)
+    radar = 'bks'
+    fileType = 'fitacf3'
+    if request.method == 'POST':
+       inpParams = request.get_json()
+       print "hello----->"
+       print inpParams
+    sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
+    return jsonify(sdPltObj.full_vel_time_plot())
+
 if __name__ == "__main__":
     app.debug=True
-    app.run(host= '0.0.0.0',port=5000, threaded=True)
+    app.run(host= '0.0.0.0',port=5000)

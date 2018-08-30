@@ -21,9 +21,47 @@ vegaEmbed("#"+div, url).then(function(result) {
   }).catch(console.error);
 }
 parse("/fitbaseplot", "fitbasevis")
-// parse("/data/waterfall", "waterfall")
-// parse("/data/line", "line");
-// parse("/data/multiline", "multiline");
-// parse("/data/stocks", "stocks");
-// parse("/data/scatter", "scatter");
 
+
+// jquery code to reset all the empty forms 
+// once the page reloads
+$( '.form-control' ).val("");
+
+// jquery code to toggle between button options
+$(".dropdown-menu li a").click(function(){
+    $(this).parents(".btn-group").find('.selection').text($(this).text());
+    $(this).parents(".btn-group").find('.selection').val($(this).text());
+
+  });
+
+
+
+// jquery code to be executed after clicking the plot button
+$('#plotButton').on('click', function (e) {
+	// get the parameters in the selected boxes
+	var ftypeVal = $("#ftypeList").parents(".btn-group").find('.selection').text()
+	var pltTypeVal = $("#pltPrmList").parents(".btn-group").find('.selection').text()
+	var dateVal = $("#dateForm").val()
+	var startTimeVal = $("#startTimeForm").val()
+	var endTimeVal = $("#endTimeForm").val()
+	var radVal = $("#radForm").val()
+	// create a json of these vals
+	inpJson = {
+		"ftypeVal" : ftypeVal,
+		"pltTypeVal" : pltTypeVal,
+		"dateVal" : dateVal,
+		"startTimeVal" : startTimeVal,
+		"endTimeVal" : endTimeVal,
+		"radVal" : radVal
+	}
+	// send (ajax) the data to flask
+	$.ajax({
+          type: "POST",
+          contentType: "application/json;charset=utf-8",
+          url: "/updatebaseplot",
+          traditional: "true",
+          data: JSON.stringify(inpJson),
+          dataType: "json"
+          });
+
+})
