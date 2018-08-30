@@ -23,15 +23,20 @@
     <!-- Custom styles for this template-->
     <link href="static/css/sb-admin.css" rel="stylesheet">
     <!-- Import Vega 4 & Vega-Lite 2 (does not have to be from CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/vega@4"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
-    <!-- Import vega-embed -->
-    <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+    <!-- <script src="https://d3js.org/d3.v3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega/3.0.0-beta.30/vega.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-lite/2.0.0-beta.2/vega-lite.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vega-embed/3.0.0-beta.14/vega-embed.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@4.2.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@3.0.0-rc5"></script>
+  <!-- Import vega-embed -->
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@3.19.2"></script>
     <script src="https://vega.github.io/datalib/datalib.min.js"></script>
 
     <!-- Vega Tooltip -->
-    <script src="https://vega.github.io/vega-tooltip/vega-tooltip.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://vega.github.io/vega-tooltip/vega-tooltip.css">
+    <!-- <script src="https://vega.github.io/vega-tooltip/vega-tooltip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://vega.github.io/vega-tooltip/vega-tooltip.css"> -->
+    <script src="https://cdn.jsdelivr.net/npm/vega-tooltip@0.13"></script>
 
 
   </head>
@@ -151,7 +156,7 @@
 
 
           <!-- Area Chart Example-->
-          <div class="card mb-3">
+          <!-- <div class="card mb-3">
             <div class="card-header">
               <i class="fas fa-chart-area"></i>
               Area Chart Example</div>
@@ -159,7 +164,9 @@
               <canvas id="myAreaChart" width="100%" height="30"></canvas>
             </div>
             <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-          </div>
+          </div> -->
+
+          <div id="vis"></div>
 
 
         <!-- Sticky Footer -->

@@ -1,6 +1,8 @@
 import pandas
 import altair as alt
+import sys
 import sd_data_utils
+import json
 
 
 class SDPlotUtils(object):
@@ -30,7 +32,7 @@ class SDPlotUtils(object):
         """
         sdDataObj = sd_data_utils.SDDataUtils(self.startTime, self.endTime,\
                         self.radar, self.fileType, filtered=self.filtered)
-        dataDF = sdDataObj.get_sd_data(saveToDisk=True)
+        return sdDataObj.get_sd_data(saveToDisk=True)
 
     def full_vel_time_plot(self):
         """
@@ -49,15 +51,21 @@ class SDPlotUtils(object):
             pltTitle = "Sp. Width vs Time (" + self.fileType + ")"
             ytitle = "Sp. Width [m/s]"
         # generate the actual plot
-        chart = alt.Chart(dfx).mark_circle(size=60).encode(
-            x=alt.X('time', axis=alt.Axis(title='Time (UT)')),
+        sdDF = self._sdData_[1]
+        # dealing with large rows
+        alt.data_transformers.enable('json')
+        chart = alt.Chart(sdDF).mark_circle(size=30).encode(
+            x=alt.X('date', axis=alt.Axis(title='Time (UT)')),
             y=alt.Y('vel', axis=alt.Axis(title='Velocity [m/s]')),
-            color='beam',
             tooltip=['vel', 'spw', 'pwr']
         ).properties(
             title='Fitacf3 Vel vs time plot'
-        ).interactive()
-        return chart.to_json()
+        )#.interactive()
+        chart.save('/tmp/t1.json')
+        with open('/tmp/t1.json') as f:
+            data = json.load(f)
+        f.close()
+        return data
 
 
 if __name__ == "__main__":

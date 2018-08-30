@@ -11,12 +11,17 @@ var opt = {
   renderer: "svg",
   actions: {export: true, source: false, editor: false}
 };
-vega.embed("#"+div, url, opt, function(error, result) {
-  // result.view is the Vega View, url is the original Vega-Lite specification
-  vegaTooltip.vegaLite(result.view, url);
-});
+// vegaEmbed("#"+div, url, opt, function(error, result) {
+//   // console.log(error)
+//   // result.view is the Vega View, url is the original Vega-Lite specification
+//   vegaTooltip.vegaLite(result.view, url);
+// });
+vegaEmbed('#vis', url).then(function(result) {
+	console.log("Hi2")
+    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+  }).catch(console.error);
 }
-parse("/defaultplot", "myAreaChart")
+parse("/defaultplot", "vis")
 // parse("/data/waterfall", "waterfall")
 // parse("/data/line", "line");
 // parse("/data/multiline", "multiline");
