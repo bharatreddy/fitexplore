@@ -18,6 +18,9 @@ class SDPlotUtils(object):
         self.radar = radar
         self.fileType = fileType
         self.filtered = filtered
+        if plotParam not in ['vel', 'spw', 'pwr']:
+            print "Choose a valid plotting parameter--> 'vel', 'spw', 'pwr'"
+            return 
         self.plotParam = plotParam
         self._sdData_ = self.load_sd_df()
 
