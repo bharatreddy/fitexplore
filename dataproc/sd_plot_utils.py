@@ -60,7 +60,7 @@ class SDPlotUtils(object):
             tooltip=['vel', 'spw', 'pwr']
         ).properties(
             title='Fitacf3 Vel vs time plot'
-        )#.interactive()
+        ).interactive()
         chart.save('/tmp/t1.json')
         with open('/tmp/t1.json') as f:
             data = json.load(f)
