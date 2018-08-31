@@ -32,16 +32,20 @@ def generate_base_plot():
 
 @app.route("/updatebaseplot", methods=['POST'])
 def update_plot():
-    startTime = datetime.datetime(2017,12,2,2)
-    endTime = datetime.datetime(2017,12,2,3)
-    radar = 'bks'
-    fileType = 'fitacf3'
+    # GET the new parameters and make a new plot
     if request.method == 'POST':
-       inpParams = request.get_json()
-       print "hello----->"
-       print inpParams
-    sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
-    return jsonify(sdPltObj.full_vel_time_plot())
+        print "generating new plot..."
+        inpParams = request.get_json()
+        startTime = datetime.datetime.strptime( inpParams["dateVal"] +\
+                         "-" + inpParams["startTimeVal"], "%Y%m%d-%H%M")
+        endTime = datetime.datetime.strptime( inpParams["dateVal"] +\
+                         "-" + inpParams["endTimeVal"], "%Y%m%d-%H%M")
+        radar = inpParams["radVal"]
+        fileType = inpParams["ftypeVal"]
+        plotParam = inpParams["pltTypeVal"]
+        sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType, plotParam=plotParam)
+        return jsonify(sdPltObj.full_vel_time_plot())
+    return None
 
 @app.route("/histcmprplot")
 def generate_hist_plot():

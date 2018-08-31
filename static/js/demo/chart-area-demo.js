@@ -20,7 +20,7 @@ vegaEmbed("#"+div, url).then(function(result) {
     // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
   }).catch(console.error);
 }
-parse("/fitbaseplot", "fitbasevis")
+// parse("/fitbaseplot", "fitbasevis")
 
 
 // jquery code to reset all the empty forms 
@@ -38,30 +38,44 @@ $(".dropdown-menu li a").click(function(){
 
 // jquery code to be executed after clicking the plot button
 $('#plotButton').on('click', function (e) {
-	// get the parameters in the selected boxes
-	var ftypeVal = $("#ftypeList").parents(".btn-group").find('.selection').text()
-	var pltTypeVal = $("#pltPrmList").parents(".btn-group").find('.selection').text()
-	var dateVal = $("#dateForm").val()
-	var startTimeVal = $("#startTimeForm").val()
-	var endTimeVal = $("#endTimeForm").val()
-	var radVal = $("#radForm").val()
-	// create a json of these vals
-	inpJson = {
-		"ftypeVal" : ftypeVal,
-		"pltTypeVal" : pltTypeVal,
-		"dateVal" : dateVal,
-		"startTimeVal" : startTimeVal,
-		"endTimeVal" : endTimeVal,
-		"radVal" : radVal
-	}
-	// send (ajax) the data to flask
-	$.ajax({
-          type: "POST",
-          contentType: "application/json;charset=utf-8",
-          url: "/updatebaseplot",
-          traditional: "true",
-          data: JSON.stringify(inpJson),
-          dataType: "json"
-          });
-
+    // get the parameters in the selected boxes
+    var ftypeVal = $("#ftypeList").parents(".btn-group").find('.selection').text()
+    var pltTypeVal = $("#pltPrmList").parents(".btn-group").find('.selection').text()
+    var dateVal = $("#dateForm").val()
+    var startTimeVal = $("#startTimeForm").val()
+    var endTimeVal = $("#endTimeForm").val()
+    var radVal = $("#radForm").val()
+    // create a json of these vals
+    inpJson = {
+        "ftypeVal" : ftypeVal,
+        "pltTypeVal" : pltTypeVal,
+        "dateVal" : dateVal,
+        "startTimeVal" : startTimeVal,
+        "endTimeVal" : endTimeVal,
+        "radVal" : radVal
+    }
+    // send (ajax) the data to flask
+    // get the json back and populate the
+    // corresponding div
+    $.ajax({
+      type: "POST",
+      contentType: "application/json;charset=utf-8",
+      url: "/updatebaseplot",
+      traditional: "true",
+      data: JSON.stringify(inpJson),
+      dataType: "json",  
+      success: function(data) {
+         parse(data, "fitbasevis"); 
+      }
+      });
 })
+
+// jquery loading function
+var $loading = $('#fitbasevis').hide();
+$(document)
+  .ajaxStart(function () {
+    $loading.hide();
+  })
+  .ajaxStop(function () {
+    $loading.show();
+  });

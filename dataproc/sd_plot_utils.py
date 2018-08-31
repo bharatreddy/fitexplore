@@ -55,7 +55,7 @@ class SDPlotUtils(object):
         # generate the plot
         chart = alt.Chart(sdDF, height=400, width=600).mark_circle(size=10).encode(
             x=alt.X('utchoursminutesseconds(date):T', axis=alt.Axis(title='Time (UT)')),
-            y=alt.Y('vel', axis=alt.Axis(title=ytitle)),
+            y=alt.Y(self.plotParam, axis=alt.Axis(title=ytitle)),
             tooltip=['vel', 'spw', 'pwr']
         ).properties(
             title=pltTitle
