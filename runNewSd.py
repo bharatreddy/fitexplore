@@ -43,7 +43,8 @@ def update_plot():
         radar = inpParams["radVal"]
         fileType = inpParams["ftypeVal"]
         plotParam = inpParams["pltTypeVal"]
-        sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType, plotParam=plotParam)
+        sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime,\
+                         radar, fileType, plotParam=plotParam)
         return jsonify(sdPltObj.full_vel_time_plot())
     return None
 
@@ -61,7 +62,8 @@ def generate_hist_plot():
         fileType = inpParams["ftypeVal"]
         plotParam = inpParams["pltTypeVal"]
         cmprParam = inpParams["cmprTypeVal"]
-        sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
+        sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime,\
+                         radar, fileType, plotParam=plotParam)
         return jsonify(sdPltObj.hist_sctr_cmpr_plot(cmprParam=cmprParam))
     return None
 
@@ -71,4 +73,4 @@ def generate_base_page():
 
 if __name__ == "__main__":
     app.debug=True
-    app.run(host= '0.0.0.0',port=5000)
+    app.run(host= '0.0.0.0',port=5000, threaded=True)
