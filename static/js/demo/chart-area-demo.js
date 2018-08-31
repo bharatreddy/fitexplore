@@ -4,21 +4,27 @@ Chart.defaults.global.defaultFontColor = '#292b2c';
 
 // Area Chart Example
 var ctx = document.getElementById("myAreaChart");
-// Render Charts 
+// Render FITACF browser chart
 function parse(url, div) {
-var opt = {
-  mode: "vega-lite",
-  renderer: "svg",
-  actions: {export: true, source: false, editor: false}
-};
-// vegaEmbed("#"+div, url, opt, function(error, result) {
-//   // console.log(error)
-//   // result.view is the Vega View, url is the original Vega-Lite specification
-//   vegaTooltip.vegaLite(result.view, url);
-// });
-vegaEmbed("#"+div, url).then(function(result) {
-    // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
-  }).catch(console.error);
+    var opt = {
+      mode: "vega-lite",
+      renderer: "svg",
+      actions: {export: true, source: false, editor: false}
+    };
+    vegaEmbed("#"+div, url).then(function(result) {
+        // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+      }).catch(console.error);
+}
+// Render Histogram scatter plot
+function parsehistsctr(url, div) {
+    var opt = {
+      mode: "vega-lite",
+      renderer: "svg",
+      actions: {export: true, source: false, editor: false}
+    };
+    vegaEmbed("#"+div, url).then(function(result) {
+        // Access the Vega view instance (https://vega.github.io/vega/docs/api/view/) as result.view
+      }).catch(console.error);
 }
 // parse("/fitbaseplot", "fitbasevis")
 
@@ -70,6 +76,43 @@ $('#plotButton').on('click', function (e) {
       });
 })
 
+
+// jquery code to be executed after clicking the plot button
+$('#plotHistButton').on('click', function (e) {
+    // get the parameters in the selected boxes
+    var ftypeVal = $("#ftypeList").parents(".btn-group").find('.selection').text()
+    var pltTypeVal = $("#pltPrmList").parents(".btn-group").find('.selection').text()
+    var cmprTypeVal = $("#cmprPrmList").parents(".btn-group").find('.selection').text()
+    var dateVal = $("#dateForm").val()
+    var startTimeVal = $("#startTimeForm").val()
+    var endTimeVal = $("#endTimeForm").val()
+    var radVal = $("#radForm").val()
+    // create a json of these vals
+    inpJson = {
+        "ftypeVal" : ftypeVal,
+        "pltTypeVal" : pltTypeVal,
+        "cmprTypeVal" : cmprTypeVal,
+        "dateVal" : dateVal,
+        "startTimeVal" : startTimeVal,
+        "endTimeVal" : endTimeVal,
+        "radVal" : radVal
+    }
+    // send (ajax) the data to flask
+    // get the json back and populate the
+    // corresponding div
+    $.ajax({
+      type: "POST",
+      contentType: "application/json;charset=utf-8",
+      url: "/updthistcmprplot",
+      traditional: "true",
+      data: JSON.stringify(inpJson),
+      dataType: "json",  
+      success: function(data) {
+         parsehistsctr(data, "histsctrvis"); 
+      }
+      });
+})
+
 // jquery loading function
 var $loading = $('#fitbasevis').hide();
 $(document)
@@ -78,4 +121,12 @@ $(document)
   })
   .ajaxStop(function () {
     $loading.show();
+  });
+var $loadingHist = $('#histsctrvis').hide();
+$(document)
+  .ajaxStart(function () {
+    $loadingHist.hide();
+  })
+  .ajaxStop(function () {
+    $loadingHist.show();
   });

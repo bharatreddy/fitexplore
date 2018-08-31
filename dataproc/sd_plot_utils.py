@@ -89,7 +89,7 @@ class SDPlotUtils(object):
         # interval selection in the scatter plot
         pts = alt.selection(type="interval", encodings=["x"])
         # left panel: scatter plot
-        points = alt.Chart().mark_point(filled=True, color="black").encode(
+        points = alt.Chart().mark_point(filled=True, color="blue").encode(
             x=self.plotParam,
             y=cmprParam
         ).transform_filter(
@@ -100,19 +100,19 @@ class SDPlotUtils(object):
         )
         # right panel: histogram
         mag = alt.Chart().mark_bar().encode(
-            x='mbin:N',
+            x='vbin:N',
             y="count()",
-            color=alt.condition(pts, alt.value("black"), alt.value("lightgray"))
+            color=alt.condition(pts, alt.value("red"), alt.value("blue"))
         ).properties(
             selection=pts,
             width=300,
             height=300
         )
         # build the chart:
-        alt.hconcat(points, mag,
+        chart = alt.hconcat(points, mag,
             data=sdDF
         ).transform_bin(
-            "mbin",
+            "vbin",
             field=self.plotParam,
             bin=alt.Bin(maxbins=20)
         )

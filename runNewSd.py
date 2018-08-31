@@ -32,7 +32,7 @@ def generate_base_plot():
 
 @app.route("/updatebaseplot", methods=['POST'])
 def update_plot():
-    # GET the new parameters and make a new plot
+    # the new parameters and make a new plot
     if request.method == 'POST':
         print "generating new plot..."
         inpParams = request.get_json()
@@ -47,14 +47,27 @@ def update_plot():
         return jsonify(sdPltObj.full_vel_time_plot())
     return None
 
-@app.route("/histcmprplot")
+@app.route("/updthistcmprplot", methods=['POST'])
 def generate_hist_plot():
-    startTime = datetime.datetime(2017,12,2,2)
-    endTime = datetime.datetime(2017,12,2,3)
-    radar = 'bks'
-    fileType = 'fitacf3'
-    sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
-    return jsonify(sdPltObj.full_vel_time_plot())    
+    # the new parameters and make a new plot
+    if request.method == 'POST':
+        print "generating new plot..."
+        inpParams = request.get_json()
+        startTime = datetime.datetime.strptime( inpParams["dateVal"] +\
+                         "-" + inpParams["startTimeVal"], "%Y%m%d-%H%M")
+        endTime = datetime.datetime.strptime( inpParams["dateVal"] +\
+                         "-" + inpParams["endTimeVal"], "%Y%m%d-%H%M")
+        radar = inpParams["radVal"]
+        fileType = inpParams["ftypeVal"]
+        plotParam = inpParams["pltTypeVal"]
+        cmprParam = inpParams["cmprTypeVal"]
+        sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
+        return jsonify(sdPltObj.hist_sctr_cmpr_plot(cmprParam=cmprParam))
+    return None
+
+@app.route("/histindexpage")
+def generate_base_page():
+    return render_template('hist_sctr.html')    
 
 if __name__ == "__main__":
     app.debug=True

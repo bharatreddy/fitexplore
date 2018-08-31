@@ -121,9 +121,9 @@
           <div class="card mb-3">
             <div class="card-header">
               <i class="fas fa-chart-area"></i>
-              Examine Fit contents</div>
+              Histogram and Scatter plots</div>
             <div class="card-body">
-              <div align="center" id="fitbasevis" width="100%" height="30"></div>
+              <div align="center" id="histsctrvis" width="100%" height="30"></div>
             </div>
 
           </div>
@@ -163,9 +163,22 @@
                   Plot Param: <span class="selection" id="pltParamMenu">vel</span><span class="caret"></span>
                 </button>
                 <ul id="pltPrmList" class="dropdown-menu" role="menu">
-                  <li><a>vel</a></li>
-                  <li><a>pwr</a></li>
-                  <li><a>spw</a></li>
+                  <li><a href="#">vel</a></li>
+                  <li><a href="#">pwr</a></li>
+                  <li><a href="#">spw</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="col-sm">
+              <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  Compare Param: <span class="selection" id="cmprParamMenu">spw</span><span class="caret"></span>
+                </button>
+                <ul id="cmprPrmList" class="dropdown-menu" role="menu">
+                  <li><a href="#">vel</a></li>
+                  <li><a href="#">pwr</a></li>
+                  <li><a href="#">spw</a></li>
                 </ul>
               </div>
             </div>
@@ -209,7 +222,7 @@
 
 
               <div class="col-sm">
-                <button id="plotButton" type="button" class="btn btn-md btn-danger">Plot</button>
+                <button id="plotHistButton" type="button" class="btn btn-md btn-danger">Plot</button>
               </div>
 
             </div>
