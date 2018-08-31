@@ -43,6 +43,15 @@ def update_plot():
     sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
     return jsonify(sdPltObj.full_vel_time_plot())
 
+@app.route("/histcmprplot")
+def generate_hist_plot():
+    startTime = datetime.datetime(2017,12,2,2)
+    endTime = datetime.datetime(2017,12,2,3)
+    radar = 'bks'
+    fileType = 'fitacf3'
+    sdPltObj = sd_plot_utils.SDPlotUtils(startTime, endTime, radar, fileType)
+    return jsonify(sdPltObj.full_vel_time_plot())    
+
 if __name__ == "__main__":
     app.debug=True
     app.run(host= '0.0.0.0',port=5000)
