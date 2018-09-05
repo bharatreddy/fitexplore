@@ -81,6 +81,7 @@ class SDDataUtils(object):
                 sdDF = sdDF[ (sdDF["date"] >= self.startTime) &\
                             (sdDF["date"] <= self.endTime)\
                                     ].reset_index(drop=True)
+                sdDF = sdDF[ sdDF["qflg"] > 0. ].reset_index(drop=True)
                 # the datetime column is in UTC
                 return (self.fileType, sdDF)
         print "feather file not found...reading from sd-data..."
@@ -146,6 +147,7 @@ class SDDataUtils(object):
         # floats now! This is memory efficient!
         intCols = [ "qflg", "gate", "gflg", "beam" ]
         sdDF[intCols] = sdDF[intCols].astype(numpy.int16)
+        sdDF = sdDF[ sdDF["qflg"] > 0. ].reset_index(drop=True)
         # Now we'll try and save the DF in the /tmp/ folder
         # for future use.
         if saveToDisk:
