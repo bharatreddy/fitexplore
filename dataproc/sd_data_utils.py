@@ -4,6 +4,7 @@ import pandas
 from davitpy import pydarn
 import glob
 import feather
+import pytz
 
 
 class SDDataUtils(object):
@@ -17,8 +18,17 @@ class SDDataUtils(object):
         """
         setup parameters
         """
-        self.startTime = startTime
-        self.endTime = endTime
+        # we'll need a timzone info to compare times
+        # with pandas.
+        if startTime.tzname() is None:
+            self.startTime = pytz.utc.localize(startTime)
+            # There is 
+        else:
+            self.startTime = startTime
+        if startTime.tzname() is None:
+            self.endTime = pytz.utc.localize(endTime)
+        else:
+            self.endTime = endTime
         self.radar = radar
         self.fileType = fileType
         self.filtered = filtered
@@ -29,8 +39,8 @@ class SDDataUtils(object):
         fitacf3 files, we need to use Kevin's code from the 
         develop branch in davitpy.
         """
-        dataPtr = pydarn.sdio.radDataOpen(self.startTime, self.radar,\
-                    self.endTime, filtered=self.filtered,\
+        dataPtr = pydarn.sdio.radDataOpen(self.startTime.replace(tzinfo=None), self.radar,\
+                    self.endTime.replace(tzinfo=None), filtered=self.filtered,\
                     fileType=self.fileType)
         if dataPtr is not None:
             return pydarn.sdio.radDataReadAll(dataPtr)
@@ -54,8 +64,11 @@ class SDDataUtils(object):
             fthrFname = fthrFLoc.split("/tmp/")[1]
             fileStartTime = datetime.datetime.strptime( \
                         fthrFname.split("__")[0], "%Y%m%d-%H%M" )
+            # assign a timezone
+            fileStartTime = pytz.utc.localize(fileStartTime)
             fileEndTime = datetime.datetime.strptime( \
                         fthrFname.split("__")[1], "%Y%m%d-%H%M" )
+            fileEndTime = pytz.utc.localize(fileEndTime)
             if ( (fileStartTime <= self.startTime) &\
                              (fileEndTime >= self.endTime) ):
                 print "feather file found--->", fthrFLoc
